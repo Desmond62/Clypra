@@ -98,6 +98,15 @@ fn exit_app(app: tauri::AppHandle, code: Option<i32>) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Initialise the logger. RUST_LOG controls verbosity at runtime.
+    // Default: show [VideoDecoder] and [BinaryResolver] at debug level,
+    // everything else at warn, so the console is not flooded.
+    env_logger::Builder::from_env(
+        env_logger::Env::default()
+            .default_filter_or("warn,clypra=debug"),
+    )
+    .init();
+
     #[cfg(target_os = "windows")]
     {
         if std::env::var("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS").is_err() {
